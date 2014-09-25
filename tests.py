@@ -1,6 +1,5 @@
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
-from future.builtins import super
 from datetime import date
 
 from tornado.ioloop import IOLoop
@@ -24,7 +23,7 @@ class ConnectionPoolTestCase(AsyncTestCase):
         return IOLoop.instance()
 
     def setUp(self):
-        super().setUp()
+        super(ConnectionPoolTestCase, self).setUp()
         # create test database and test table
         self.cnx = mysql.connector.connect(**self.DB_CONFIG)
         self.cursor = self.cnx.cursor()
@@ -41,7 +40,7 @@ class ConnectionPoolTestCase(AsyncTestCase):
         self.cursor.close()
         self.cnx.close()
         self.pool.close()
-        super().tearDown()
+        super(ConnectionPoolTestCase, self).tearDown()
 
     @gen_test
     def test_run_query_empty(self):

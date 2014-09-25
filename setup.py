@@ -7,7 +7,8 @@ except ImportError:
 
 setup(
     name='toradbapi',
-    version='0.1.1',
+    version='0.1.2',
+    py_modules=('toradbapi',),
     description='Wrapper for twisted.enterprise.adbapi.ConnectionPool to use with tornado',
     long_description=open('README.md').read(),
     author='Timofey Trukhanov',

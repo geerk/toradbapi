@@ -66,7 +66,7 @@ def setup_database():
     cursor.execute('USE `%s`' % DB_NAME)
     cursor.execute('CREATE TABLE IF NOT EXISTS `person` ('
                    '    `name` varchar(255) NOT NULL,'
-                   '    `dob` date DEFAULT NULL'
+                   '    `dob` date DEFAULT NULL,'
                    '    UNIQUE KEY (`name`))')
     cursor.close()
     cnx.close()

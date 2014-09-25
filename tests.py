@@ -14,8 +14,8 @@ from toradbapi import ConnectionPool
 
 class ConnectionPoolTestCase(AsyncTestCase):
     DB_CONFIG = {
-        'user': 'root', 'password': '', 'host': '127.0.0.1', 'port': 3306}
-    DB_NAME = 'test_toradbapi'
+        'user': 'root', 'password': '', 'host': '127.0.0.1', 'port': 3306,
+        'database': 'test_toradbapi'}
     DB_DRIVER = 'mysql.connector'
 
     def get_new_ioloop(self):
@@ -32,8 +32,7 @@ class ConnectionPoolTestCase(AsyncTestCase):
                             '    `dob` date DEFAULT NULL,'
                             '    UNIQUE KEY (`name`))')
         # create connection pool
-        self.pool = ConnectionPool(
-            self.DB_DRIVER, database=self.DB_NAME, **self.DB_CONFIG)
+        self.pool = ConnectionPool(self.DB_DRIVER, **self.DB_CONFIG)
 
     def tearDown(self):
         self.cursor.execute('DROP TABLE `person`')

@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/geerk/toradbapi.svg?branch=master)](https://travis-ci.org/geerk/toradbapi)
+
 Want to use twisted's adbapi in tornado but does not know how? Try toradbapi.
 
 This is just wrapper for `twisted.enterprise.adbapi.ConnectionPool` to use with tornado. So documentation for `__init__` args you can find at [twisted docs](https://twistedmatrix.com/documents/14.0.2/api/twisted.enterprise.adbapi.ConnectionPool.html#__init__).

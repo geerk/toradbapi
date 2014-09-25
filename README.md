@@ -4,6 +4,12 @@ Want to use twisted's adbapi in tornado but does not know how? Try toradbapi.
 
 This is just wrapper for `twisted.enterprise.adbapi.ConnectionPool` to use with tornado. So documentation for `__init__` args you can find at [twisted docs](https://twistedmatrix.com/documents/14.0.2/api/twisted.enterprise.adbapi.ConnectionPool.html#__init__).
 
+To install it run:
+
+```
+pip install toradbapi
+```
+
 Available methods in `toradbapi.ConnectionPool`:
 - run_query
 - run_operation
@@ -25,6 +31,6 @@ def get_entities():
   raise gen.Return(entities)
 ```
 
-Demo project is under demo.py file.
+Demo project is under demo.py file. Also there are plenty examples in tests.py.
 
 Only Python 2.7 supported for now.

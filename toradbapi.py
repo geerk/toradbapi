@@ -1,3 +1,13 @@
+"""
+toradbapi
+=========
+
+Wrapper for twisted.enterprise.adbapi.ConnectionPool to use with tornado.
+
+Copyright (c) 2014, Timofey Trukhanov.
+MIT, see LICENSE for more details.
+"""
+
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 

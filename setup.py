@@ -9,7 +9,7 @@ setup(
     name='toradbapi',
     version='0.1',
     description='Wrapper for twisted.enterprise.adbapi.ConnectionPool to use with tornado',
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     author='Timofey Trukhanov',
     author_email='timofey.trukhanov@gmail.com',
     license='MIT',

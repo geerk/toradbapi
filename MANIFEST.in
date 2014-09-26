@@ -1,1 +1,1 @@
-include README.md LICENSE tests.py demo.py toradbapi.py
+include README.rst LICENSE tests.py demo.py toradbapi.py

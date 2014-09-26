@@ -55,7 +55,7 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
             'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
             ('testname', date(1000, 10, 10)))
         result = yield self.pool.run_query('SELECT * FROM `person`')
-        self.assertEqual(result, [('testname', date(1000, 10, 10))])
+        self.assertEqual(list(result), [('testname', date(1000, 10, 10))])
 
     @gen_test
     def test_transaction_error(self):
@@ -82,7 +82,8 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
                 'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
                 ('testname', date(1000, 10, 10)))
             txn.execute('SELECT * FROM `person`')
-            self.assertEqual(txn.fetchall(), [('testname', date(1000, 10, 10))])
+            self.assertEqual(list(txn.fetchall()),
+                             [('testname', date(1000, 10, 10))])
             txn.execute(
                 'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
                 ('testname', date(1000, 10, 10)))

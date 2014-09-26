@@ -21,7 +21,7 @@ Example usage:
 
 ```python
 from tornado import gen
-from toradminapi import ConnectionPool
+from toradbapi import ConnectionPool
 
 pool = ConnectionPool('MySQLdb', db='test')
 
@@ -31,6 +31,6 @@ def get_entities():
   raise gen.Return(entities)
 ```
 
-Demo project is under demo.py file. Also there are plenty examples in tests.py.
+Demo project is under demo.py file. Also there are more examples in tests.py.
 
 Only Python 2.7 supported for now.

@@ -8,6 +8,7 @@ from tornado.test.util import unittest
 import tornado.platform.twisted
 import mysql.connector
 import pymysql
+import cymysql
 
 try:
     import MySQLdb
@@ -26,6 +27,7 @@ class MySQLConnectorConnectionPoolTestCase(AsyncTestCase):
     DB_DRIVER = 'mysql.connector'
     DATABASE_ERROR = mysql.connector.errors.DatabaseError
     PROGRAMMING_ERROR = mysql.connector.errors.ProgrammingError
+    DB_PARAMSTYLE = '%s'
 
     def get_new_ioloop(self):
         # use singleton ioloop and reactor across all tests
@@ -58,7 +60,8 @@ class MySQLConnectorConnectionPoolTestCase(AsyncTestCase):
     @gen_test
     def test_insert_select(self):
         yield self.pool.run_operation(
-            'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
+            'INSERT INTO `person` (`name`, `dob`) VALUES ({0}, {0})'.format(
+                self.DB_PARAMSTYLE),
             ('testname', date(1000, 10, 10)))
         result = yield self.pool.run_query('SELECT * FROM `person`')
         self.assertEqual(list(result), [('testname', date(1000, 10, 10))])
@@ -67,9 +70,11 @@ class MySQLConnectorConnectionPoolTestCase(AsyncTestCase):
     def test_transaction_error(self):
         def _interaction(txn):
             txn.execute(
-                'INSERT INTO `person` (`dob`) VALUES (%s)')
+                'INSERT INTO `person` (`dob`) VALUES ({0})'.format(
+                    self.DB_PARAMSTYLE))
             txn.execute(
-                'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
+                'INSERT INTO `person` (`name`, `dob`) VALUES ({0}, {0})'.format(
+                    self.DB_PARAMSTYLE),
                 ('testname', date(1000, 10, 10)))
         try:
             yield self.pool.run_interaction(_interaction)
@@ -85,13 +90,15 @@ class MySQLConnectorConnectionPoolTestCase(AsyncTestCase):
     def test_transaction_rollback(self):
         def _interaction(txn):
             txn.execute(
-                'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
+                'INSERT INTO `person` (`name`, `dob`) VALUES ({0}, {0})'.format(
+                    self.DB_PARAMSTYLE),
                 ('testname', date(1000, 10, 10)))
             txn.execute('SELECT * FROM `person`')
             self.assertEqual(list(txn.fetchall()),
                              [('testname', date(1000, 10, 10))])
             txn.execute(
-                'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
+                'INSERT INTO `person` (`name`, `dob`) VALUES ({0}, {0})'.format(
+                    self.DB_PARAMSTYLE),
                 ('testname', date(1000, 10, 10)))
         try:
             yield self.pool.run_interaction(_interaction)
@@ -107,10 +114,12 @@ class MySQLConnectorConnectionPoolTestCase(AsyncTestCase):
     def test_transaction_success(self):
         def _interaction(txn):
             txn.execute(
-                'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
+                'INSERT INTO `person` (`name`, `dob`) VALUES ({0}, {0})'.format(
+                    self.DB_PARAMSTYLE),
                 ('testname0', date(1000, 10, 10)))
             txn.execute(
-                'INSERT INTO `person` (`name`, `dob`) VALUES (%s, %s)',
+                'INSERT INTO `person` (`name`, `dob`) VALUES ({0}, {0})'.format(
+                    self.DB_PARAMSTYLE),
                 ('testname1', date(1111, 11, 11)))
 
         yield self.pool.run_interaction(_interaction)
@@ -121,7 +130,7 @@ class MySQLConnectorConnectionPoolTestCase(AsyncTestCase):
             ('testname1', date(1111, 11, 11))])
 
 
-@unittest.skipIf(MySQLdb is None, 'MySQLdb is not available')
+@unittest.skipIf(MySQLdb is None, 'MySQLdb driver is not available')
 class MySQLdbConnectionPoolTestCase(MySQLConnectorConnectionPoolTestCase):
     DB_DRIVER = 'MySQLdb'
 
@@ -135,3 +144,9 @@ class PyMySQLConnectionPoolTestCase(MySQLConnectorConnectionPoolTestCase):
     DB_DRIVER = 'pymysql'
     DATABASE_ERROR = pymysql.DatabaseError
     PROGRAMMING_ERROR = pymysql.ProgrammingError
+
+
+class CyMySQLConnectionPoolTestCase(MySQLConnectorConnectionPoolTestCase):
+    DB_DRIVER = 'cymysql'
+    DATABASE_ERROR = cymysql.DatabaseError
+    PROGRAMMING_ERROR = cymysql.ProgrammingError

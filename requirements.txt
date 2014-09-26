@@ -2,3 +2,5 @@ tornado
 twisted
 https://dev.mysql.com/get/Downloads/Connector-Python/mysql-connector-python-2.0.1.tar.gz
 PyMySQL
+Cython
+CyMySQL

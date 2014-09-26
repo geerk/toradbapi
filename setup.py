@@ -7,13 +7,14 @@ except ImportError:
 
 setup(
     name='toradbapi',
-    version='0.1.2',
+    version='0.1.3',
     py_modules=('toradbapi',),
     description='Wrapper for twisted.enterprise.adbapi.ConnectionPool to use with tornado',
     long_description=open('README.rst').read(),
     author='Timofey Trukhanov',
     author_email='timofey.trukhanov@gmail.com',
     license='MIT',
+    url='https://github.com/geerk/toradbapi',
     test_suite='tests',
     install_requires=('tornado', 'twisted'),
     classifiers = (

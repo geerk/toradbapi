@@ -16,7 +16,7 @@ from toradbapi import ConnectionPool
 class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
     DB_CONFIG = dict(
         user='root', password='', host='127.0.0.1', port=3306,
-        database='test_toradbapi')
+        db='test_toradbapi')
     DB_DRIVER = 'mysql.connector'
     DATABASE_ERROR = mysql.connector.errors.DatabaseError
     PROGRAMMING_ERROR = mysql.connector.errors.ProgrammingError

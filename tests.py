@@ -7,6 +7,7 @@ from tornado.testing import AsyncTestCase, gen_test
 from tornado.test.util import unittest
 import tornado.platform.twisted
 import mysql.connector
+import pymysql
 
 try:
     import MySQLdb
@@ -18,7 +19,7 @@ tornado.platform.twisted.install()
 from toradbapi import ConnectionPool
 
 
-class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
+class MySQLConnectorConnectionPoolTestCase(AsyncTestCase):
     DB_CONFIG = dict(
         user='root', passwd='', host='127.0.0.1', port=3306,
         db='test_toradbapi')
@@ -31,7 +32,7 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
         return IOLoop.instance()
 
     def setUp(self):
-        super(MysqlConnectorConnectionPoolTestCase, self).setUp()
+        super(MySQLConnectorConnectionPoolTestCase, self).setUp()
         # create test database and test table
         self.cnx = mysql.connector.connect(**self.DB_CONFIG)
         self.cursor = self.cnx.cursor()
@@ -47,7 +48,7 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
         self.cursor.close()
         self.cnx.close()
         self.pool.close()
-        super(MysqlConnectorConnectionPoolTestCase, self).tearDown()
+        super(MySQLConnectorConnectionPoolTestCase, self).tearDown()
 
     @gen_test
     def test_run_query_empty(self):
@@ -121,10 +122,16 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
 
 
 @unittest.skipIf(MySQLdb is None, 'MySQLdb is not available')
-class MySQLdbConnectionPoolTestCase(MysqlConnectorConnectionPoolTestCase):
+class MySQLdbConnectionPoolTestCase(MySQLConnectorConnectionPoolTestCase):
     DB_DRIVER = 'MySQLdb'
 
     @classmethod
     def setUpClass(cls):
         cls.DATABASE_ERROR = MySQLdb.DatabaseError
         cls.PROGRAMMING_ERROR = MySQLdb.ProgrammingError
+
+
+class PyMySQLConnectionPoolTestCase(MySQLConnectorConnectionPoolTestCase):
+    DB_DRIVER = 'pymysql'
+    DATABASE_ERROR = pymysql.DatabaseError
+    PROGRAMMING_ERROR = pymysql.ProgrammingError

@@ -4,9 +4,14 @@ from datetime import date
 
 from tornado.ioloop import IOLoop
 from tornado.testing import AsyncTestCase, gen_test
+from tornado.test.util import unittest
 import tornado.platform.twisted
 import mysql.connector
-import MySQLdb
+
+try:
+    import MySQLdb
+except ImportError:
+    MySQLdb = None
 
 tornado.platform.twisted.install()
 
@@ -115,7 +120,11 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
             ('testname1', date(1111, 11, 11))])
 
 
+@unittest.skipIf(MySQLdb is None, 'MySQLdb is not available')
 class MySQLdbConnectionPoolTestCase(MysqlConnectorConnectionPoolTestCase):
     DB_DRIVER = 'MySQLdb'
-    DATABASE_ERROR = MySQLdb.DatabaseError
-    PROGRAMMING_ERROR = MySQLdb.ProgrammingError
+
+    @classmethod
+    def setUpClass(cls):
+        cls.DATABASE_ERROR = MySQLdb.DatabaseError
+        cls.PROGRAMMING_ERROR = MySQLdb.ProgrammingError

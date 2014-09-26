@@ -21,6 +21,7 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python :: Implementation :: PyPy',
         'Programming Language :: Python :: 2.7',
         'Operating System :: OS Independent',
         'Topic :: Database'))

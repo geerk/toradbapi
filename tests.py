@@ -6,24 +6,27 @@ from tornado.ioloop import IOLoop
 from tornado.testing import AsyncTestCase, gen_test
 import tornado.platform.twisted
 import mysql.connector
+import MySQLdb
 
 tornado.platform.twisted.install()
 
 from toradbapi import ConnectionPool
 
 
-class ConnectionPoolTestCase(AsyncTestCase):
+class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
     DB_CONFIG = {
         'user': 'root', 'password': '', 'host': '127.0.0.1', 'port': 3306,
         'database': 'test_toradbapi'}
     DB_DRIVER = 'mysql.connector'
+    DATABASE_ERROR = mysql.connector.errors.DatabaseError
+    PROGRAMMING_ERROR = mysql.connector.errors.ProgrammingError
 
     def get_new_ioloop(self):
         # use singleton ioloop and reactor across all tests
         return IOLoop.instance()
 
     def setUp(self):
-        super(ConnectionPoolTestCase, self).setUp()
+        super(MysqlConnectorConnectionPoolTestCase, self).setUp()
         # create test database and test table
         self.cnx = mysql.connector.connect(**self.DB_CONFIG)
         self.cursor = self.cnx.cursor()
@@ -39,7 +42,7 @@ class ConnectionPoolTestCase(AsyncTestCase):
         self.cursor.close()
         self.cnx.close()
         self.pool.close()
-        super(ConnectionPoolTestCase, self).tearDown()
+        super(MysqlConnectorConnectionPoolTestCase, self).tearDown()
 
     @gen_test
     def test_run_query_empty(self):
@@ -64,7 +67,7 @@ class ConnectionPoolTestCase(AsyncTestCase):
                 ('testname', date(1000, 10, 10)))
         try:
             yield self.pool.run_interaction(_interaction)
-        except mysql.connector.errors.ProgrammingError:
+        except self.PROGRAMMING_ERROR:
             pass
         else:
             self.fail()
@@ -85,7 +88,7 @@ class ConnectionPoolTestCase(AsyncTestCase):
                 ('testname', date(1000, 10, 10)))
         try:
             yield self.pool.run_interaction(_interaction)
-        except mysql.connector.errors.DatabaseError:
+        except self.DATABASE_ERROR:
             pass
         else:
             self.fail()
@@ -109,3 +112,9 @@ class ConnectionPoolTestCase(AsyncTestCase):
         self.assertEqual(result, [
             ('testname0', date(1000, 10, 10)),
             ('testname1', date(1111, 11, 11))])
+
+
+class MySQLdbConnectionPoolTestCase(MysqlConnectorConnectionPoolTestCase):
+    DB_DRIVER = 'MySQLdb'
+    DATABASE_ERROR = MySQLdb.DatabaseError
+    PROGRAMMING_ERROR = MySQLdb.ProgrammingError

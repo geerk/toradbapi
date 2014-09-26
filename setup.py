@@ -22,4 +22,5 @@ setup(
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: Implementation :: CPython',
         'Programming Language :: Python :: 2.7',
+        'Operating System :: OS Independent',
         'Topic :: Database'))

@@ -47,7 +47,7 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
     @gen_test
     def test_run_query_empty(self):
         result = yield self.pool.run_query('SELECT * FROM `person`')
-        self.assertEqual(result, [])
+        self.assertEqual(list(result), [])
 
     @gen_test
     def test_insert_select(self):
@@ -73,7 +73,7 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
             self.fail()
 
         result = yield self.pool.run_query('SELECT * FROM `person`')
-        self.assertEqual(result, [])
+        self.assertEqual(list(result), [])
 
     @gen_test
     def test_transaction_rollback(self):
@@ -94,7 +94,7 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
             self.fail()
 
         result = yield self.pool.run_query('SELECT * FROM `person`')
-        self.assertEqual(result, [])
+        self.assertEqual(list(result), [])
 
     @gen_test
     def test_transaction_success(self):
@@ -109,7 +109,7 @@ class MysqlConnectorConnectionPoolTestCase(AsyncTestCase):
         yield self.pool.run_interaction(_interaction)
 
         result = yield self.pool.run_query('SELECT * FROM `person`')
-        self.assertEqual(result, [
+        self.assertEqual(list(result), [
             ('testname0', date(1000, 10, 10)),
             ('testname1', date(1111, 11, 11))])
 
